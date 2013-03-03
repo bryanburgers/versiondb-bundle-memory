@@ -39,7 +39,7 @@ describe('Memory Bundle', function() {
 		it('throws an error for non-existent product', function() {
 			var bundle = memorybundle();
 			(function() {
-				 bundle.getVersions("example");
+				bundle.getVersions("example");
 			}).should.throwError();
 		});
 
