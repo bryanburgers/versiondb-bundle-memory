@@ -1,5 +1,7 @@
 "use strict";
 
+var semver = require('semver');
+
 function MemoryBundle() {
 	this.data = {};
 }
@@ -7,6 +9,11 @@ MemoryBundle.prototype.addUpdateQuery = function(productName, version, query) {
 	if (!this.data[productName]) {
 		this.data[productName] = {};
 	}
+
+	if (!semver.valid(version)) {
+		throw new Error('Invalid version: ' + version);
+	}
+
 	this.data[productName][version] = query;
 };
 MemoryBundle.prototype.getProducts = function() {

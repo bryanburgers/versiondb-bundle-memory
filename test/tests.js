@@ -3,6 +3,38 @@ var should = require('should');
 
 describe('Memory Bundle', function() {
 
+	describe('addUpdateQuery', function() {
+		it('can add an update query', function() {
+			(function() {
+				var bundle = memorybundle();
+				bundle.addUpdateQuery("example", "1.0.0", "CREATE SCHEMA example");
+			}).should.not.throwError();
+		});
+
+		it('throws an error on an invalid version', function() {
+			(function() {
+				var bundle = memorybundle();
+				bundle.addUpdateQuery("example", "bleh", "CREATE SCHEMA example");
+			}).should.throwError(/version/i);
+		});
+
+		it('can overrwrite an update query', function(done) {
+			var bundle = memorybundle();
+
+			(function() {
+				bundle.addUpdateQuery("example", "1.0.0", "CREATE SCHEMA example");
+				bundle.addUpdateQuery("example", "1.0.0", "overwritten");
+			}).should.not.throwError();
+
+			bundle.getUpdateQuery('example', '1.0.0', function(err, query) {
+				should.not.exist(err);
+				query.should.eql('overwritten');
+
+				done();
+			});
+		});
+	});
+
 	describe('getProducts', function() {
 		it('returns the correct products - empty', function() {
 			var bundle = memorybundle();
